@@ -29,6 +29,9 @@ def connect_socket(addr):
     except:
         print("DID NOT CONNECT")
         pass
+    finally:
+        s.close()
+
 
 def main():
     addr_info = socket.getaddrinfo(HOST, PORT, proto=socket.SOL_TCP)
