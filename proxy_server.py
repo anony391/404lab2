@@ -24,6 +24,7 @@ def main():
         #listen forever for connections
         while True:
             conn, addr = s.accept() #accept incoming connections
+            print(conn)
             with conn:
                 #create a socket
                 with socket.socket(family, socketype) as proxy_end:
@@ -49,7 +50,7 @@ def main():
                     conn.sendall(full_data_from_google)
             #print(full_data)
             #send data back as response
-            conn.sendall(full_data)
+            #conn.sendall(full_data)
  
 
 if __name__ == "__main__":

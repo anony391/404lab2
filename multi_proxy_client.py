@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import socket
+from multiprocessing import Pool
+
 
 HOST = "localhost"
 PORT = 8001
@@ -39,7 +41,9 @@ def connect_socket(addr):
 def main():
     addr_info = socket.getaddrinfo(HOST, PORT, proto=socket.SOL_TCP)
     addr = addr_info[0]
-    connect_socket(addr)
+    #connect_socket(addr)
+    with Pool() as p:
+        p.map(connect_socket, [addr for _ in range(1,50)])
 
 if __name__ == "__main__":
     main()

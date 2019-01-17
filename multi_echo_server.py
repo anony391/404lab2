@@ -1,11 +1,27 @@
 #!/usr/bin/env python3
 
 import socket
+from multiprocessing import Process
 import time
 
 HOST = ""
 PORT = 8001
 BUFFER_SIZE = 1024
+
+def handle_echo(conn,addr):
+    with conn:
+       print(conn)
+       full_data = b""
+       while True:
+           data = conn.recv(BUFFER_SIZE)
+           if not data:
+               break
+           full_data += data
+       time.sleep(0.5)
+       #send data back
+       conn.sendall(full_data)
+       #tell connection to shut read and write
+       conn.shutdown(socket.SHUT_RDWR)
 
 def main():
     #create socket 
@@ -19,17 +35,9 @@ def main():
         #listen forever for connections
         while True:
             conn, addr = s.accept() #accept incoming connections
-            print(addr)
-            full_data = b""
-            while True:
-                data = conn.recv(BUFFER_SIZE)
-                if not data:
-                    break
-                full_data += data
-            #print(full_data)
-            #send data back as response
-            time.sleep(0.5)
-            conn.sendall(full_data)
+            p = Process(target=handle_echo, args=(conn, addr))
+            p.daemon = True
+            p.start()
  
 
 if __name__ == "__main__":
